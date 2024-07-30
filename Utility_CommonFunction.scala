@@ -220,4 +220,20 @@ def sink2Ods(tmpTable: String ,deltaTable: String )  {
 // MAGIC
 
 // COMMAND ----------
+******************************************************************************************
+// Databricks notebook source
+// MAGIC %md
+// MAGIC ### reading the csv data to delta function
 
+// COMMAND ----------
+
+def getDataframeFromCsv(filePath: String ,deltaTable: String )  {
+  
+  val jdbcDF = spark.read
+                    .format("csv")
+                    .option("delimiter", ",")
+                    .option("header", "true")           
+                    .option("inferSchema", "true")              
+                    .load(filePath)
+  jdbcDF.write.format("delta").mode("overwrite").option("mergeSchema",true).saveAsTable(deltaTable)
+}
